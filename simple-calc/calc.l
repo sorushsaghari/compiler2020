@@ -1,17 +1,20 @@
 %{
-#define YYSTYPE double
-#include "calc.tab.h"
+    #define YYSTYPE double
+    void yyerror(char const *s);
+    #include "calc.tab.h"
 %}
 
 white [ \t]+
 digit [0-9]
 integer {digit}+
-real {integer}("."{integer})?
+float {integer}("."{integer})?
 
 %%
 
 {white} { }
-{real} { yylval=atof(yytext); return NUMBER; }
+{float} { yylval=atof(yytext); return NUMBER;}
+
+
 
 "+" return PLUS;
 "-" return MINUS;
@@ -22,7 +25,10 @@ real {integer}("."{integer})?
 ")" return RIGHT;
 "\n" return END;
 
+. { yyerror("Unrecognized character"); }
 %%
+
 int yywrap(void) {
 return 1;
 }
+
